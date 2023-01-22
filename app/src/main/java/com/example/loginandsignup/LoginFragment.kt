@@ -1,5 +1,6 @@
 package com.example.loginandsignup
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ class LoginFragment : Fragment() {
     private lateinit var vm:loginViewModel
     private lateinit var logMsg:String
     private lateinit var logErrorMsg:String
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +33,7 @@ class LoginFragment : Fragment() {
         _binding = FragmentLoginBinding.inflate(
             inflater, container, false
         )
+        val sharedPreference =  requireContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
         vm = ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
             .create(loginViewModel::class.java)
         binding.logUser.doOnTextChanged { text, _, _, _ ->
@@ -77,6 +80,10 @@ class LoginFragment : Fragment() {
                 try {
                     val jsonObject = JSONObject(Gson().toJson(it.body()))
                     logMsg = jsonObject.getString("message")
+
+                    val editor = sharedPreference.edit()
+                    editor.putString("key",logMsg)
+                    editor.apply()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }

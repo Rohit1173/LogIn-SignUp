@@ -2,9 +2,7 @@ package com.example.loginandsignup.api
 
 import com.example.loginandsignup.data.myResponse
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface MyApi {
     @FormUrlEncoded
@@ -21,4 +19,9 @@ interface MyApi {
         @Field("userName") userName: String,
         @Field("userPassword") userPassword: String,
     ): Call<myResponse>
+
+    @GET("/jwt")
+    suspend fun verifyUser(
+        @Header("auth-token") token:String
+    ):myResponse
 }

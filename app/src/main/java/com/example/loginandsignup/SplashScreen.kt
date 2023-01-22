@@ -1,18 +1,25 @@
 package com.example.loginandsignup
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.loginandsignup.databinding.FragmentEntranceBinding
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.loginandsignup.databinding.FragmentSplashScreenBinding
+import com.example.loginandsignup.viewModel.jwtViewModel
+import com.example.loginandsignup.viewModel.loginViewModel
 
 
 class SplashScreen : Fragment() {
 
     private var _binding: FragmentSplashScreenBinding? = null
     private val binding get() = _binding!!
+    lateinit var vm:jwtViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,6 +28,43 @@ class SplashScreen : Fragment() {
         _binding = FragmentSplashScreenBinding.inflate(
             inflater, container, false
         )
+        vm = ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
+            .create(jwtViewModel::class.java)
+
+//        Handler().postDelayed({
+//           findNavController().navigate(R.id.action_splashScreen_to_loginFragment)
+//        },3000)
+
+        val sharedPreference =  requireContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
+
+        val myKey: String? =sharedPreference.getString("key","")
+        if(myKey!!.isNotEmpty())
+        {
+
+            vm.checkLogin(myKey)
+
+            vm.myevent.observe(viewLifecycleOwner){
+                Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
+                if(it.message=="SUCCESSFULLY VERIFIED"){
+                    Handler().postDelayed({
+                        findNavController().navigate(R.id.action_splashScreen_to_entranceFragment)
+                    },3000)
+                }
+                else{
+                    Handler().postDelayed({
+                        findNavController().navigate(R.id.action_splashScreen_to_loginFragment)
+                    },3000)
+                }
+            }
+        }
+        else{
+            Handler().postDelayed({
+                findNavController().navigate(R.id.action_splashScreen_to_loginFragment)
+            },3000)
+        }
+
+
+
 
         return binding.root
     }

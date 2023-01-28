@@ -1,8 +1,9 @@
-package com.example.loginandsignup
+package com.example.loginandsignup.fragemnts
 
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.loginandsignup.R
 import com.example.loginandsignup.databinding.FragmentSplashScreenBinding
 import com.example.loginandsignup.viewModel.jwtViewModel
-import com.example.loginandsignup.viewModel.loginViewModel
 
 
 class SplashScreen : Fragment() {
@@ -38,12 +39,20 @@ class SplashScreen : Fragment() {
         val sharedPreference =  requireContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
 
         val myKey: String? =sharedPreference.getString("key","")
+        vm.status.observe(viewLifecycleOwner){
+            if(it!="SUCCESS"){
+                Handler().postDelayed({
+                    findNavController().navigate(R.id.action_splashScreen_to_loginFragment)
+                },3000)
+            }
+        }
         if(myKey!!.isNotEmpty())
         {
 
             vm.checkLogin(myKey)
 
             vm.myevent.observe(viewLifecycleOwner){
+
                 Toast.makeText(requireContext(),it.message,Toast.LENGTH_LONG).show()
                 if(it.message=="SUCCESSFULLY VERIFIED"){
                     Handler().postDelayed({

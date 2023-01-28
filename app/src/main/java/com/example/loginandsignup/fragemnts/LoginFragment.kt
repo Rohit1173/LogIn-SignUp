@@ -1,7 +1,6 @@
-package com.example.loginandsignup
+package com.example.loginandsignup.fragemnts
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.loginandsignup.R
 import com.example.loginandsignup.data.loginData
 import com.example.loginandsignup.databinding.FragmentLoginBinding
 import com.example.loginandsignup.viewModel.loginViewModel

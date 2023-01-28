@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.loginandsignup.api.retrofitInstance
 import com.example.loginandsignup.data.myResponse
+import com.example.loginandsignup.data.otpData
 import com.example.loginandsignup.data.signupData
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,6 +27,27 @@ class signupViewModel(application: Application):AndroidViewModel(application) {
                 response: Response<myResponse>
             ) {
                 signResponse.value = response
+            }
+
+            override fun onFailure(call: Call<myResponse>, t: Throwable) {
+                Toast.makeText(getApplication(), t.message, Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    var otpResponse: MutableLiveData<Response<myResponse>> = MutableLiveData()
+
+
+    fun postOtp(otpData: otpData) {
+        retrofitInstance.api.sendOtp(
+            otpData.userName,
+            otpData.userEmail
+        ).enqueue(object : Callback<myResponse> {
+            override fun onResponse(
+                call: Call<myResponse>,
+                response: Response<myResponse>
+            ) {
+                otpResponse.value = response
             }
 
             override fun onFailure(call: Call<myResponse>, t: Throwable) {

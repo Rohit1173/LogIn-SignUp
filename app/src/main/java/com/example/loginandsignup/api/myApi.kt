@@ -17,11 +17,19 @@ interface MyApi {
     @POST("/login")
     fun loginUser(
         @Field("userName") userName: String,
-        @Field("userPassword") userPassword: String,
+        @Field("userPassword") userPassword: String
     ): Call<myResponse>
 
     @GET("/jwt")
     suspend fun verifyUser(
         @Header("auth-token") token:String
     ):myResponse
+
+    @FormUrlEncoded
+    @POST("/otp")
+    fun sendOtp(
+        @Field("userName") userName: String,
+        @Field("userEmail") userEmail: String
+    ): Call<myResponse>
+
 }

@@ -1,4 +1,4 @@
-package com.example.loginandsignup
+package com.example.loginandsignup.fragemnts
 
 import android.os.Bundle
 import android.util.Patterns
@@ -10,6 +10,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.loginandsignup.R
+import com.example.loginandsignup.data.otpData
 import com.example.loginandsignup.data.signupData
 import com.example.loginandsignup.databinding.FragmentSignUpBinding
 import com.example.loginandsignup.viewModel.signupViewModel
@@ -25,6 +27,9 @@ class SignUpFragment : Fragment() {
     private lateinit var vm: signupViewModel
     private lateinit var signMsg:String
     private lateinit var signErrorMsg:String
+    private lateinit var otpMsg:String
+    private lateinit var otpErrorMsg:String
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +41,7 @@ class SignUpFragment : Fragment() {
         vm = ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
             .create(signupViewModel::class.java)
         binding.setEmail.doOnTextChanged { text, _, _, _ ->
-            if (!email_check(text.toString())) {
+            if (!emailCheck(text.toString())) {
                 binding.layoutSetEmail.error = "Invalid E-Mail Format"
             } else {
                 binding.layoutSetEmail.error = null
@@ -64,6 +69,14 @@ class SignUpFragment : Fragment() {
         }
         binding.changeToLogin.setOnClickListener {
             findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
+        }
+        binding.sendOtp.setOnClickListener {
+            if(binding.setUsername.text.toString().trim().isNotEmpty()&&binding.setEmail.text.toString().trim().isNotEmpty()){
+                vm.postOtp(otpData(binding.setUsername.text.toString().trim(),binding.setEmail.text.toString().trim()))
+            }
+            else{
+                Toast.makeText(context,"UserName and UserEmail cannot be empty",Toast.LENGTH_LONG).show()
+            }
         }
         binding.SignUpBtn.setOnClickListener {
             if (binding.setName.text.toString().trim().isEmpty()) {
@@ -105,6 +118,27 @@ class SignUpFragment : Fragment() {
                 ).show()
             }
         }
+        vm.otpResponse.observe(
+            viewLifecycleOwner
+        ) {
+            if (it.isSuccessful) {
+                try {
+                    val jsonObject = JSONObject(Gson().toJson(it.body()))
+                    otpMsg = jsonObject.getString("message")
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+                Toast.makeText(context, "OTP SENT", Toast.LENGTH_LONG).show()
+            } else {
+                try {
+                    val jObjError = JSONObject(it.errorBody()!!.string())
+                     otpErrorMsg = jObjError.getString("message")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                Toast.makeText(context, otpErrorMsg, Toast.LENGTH_LONG).show()
+            }
+        }
 
         vm.signResponse.observe(
             viewLifecycleOwner
@@ -144,7 +178,9 @@ class SignUpFragment : Fragment() {
             binding.setEmail.text.toString().trim().isNotEmpty() &&
             binding.setPassword.text.toString().trim().isNotEmpty() &&
             binding.setConfirmPassword.text.toString().trim().isNotEmpty() &&
-            email_check(binding.setEmail.text.toString().trim()) &&
+            binding.setOtp.text.toString().trim().isNotEmpty()&&
+            binding.setOtp.text.toString().trim()==otpMsg&&
+            emailCheck(binding.setEmail.text.toString().trim()) &&
             binding.setPassword.text.toString()
                 .trim() == binding.setConfirmPassword.text.toString().trim()
         ) {
@@ -153,7 +189,7 @@ class SignUpFragment : Fragment() {
         return false
     }
 
-    private fun email_check(text: String): Boolean {
+    private fun emailCheck(text: String): Boolean {
         if (Patterns.EMAIL_ADDRESS.matcher(text).matches()) {
             return true
         }

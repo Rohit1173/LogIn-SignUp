@@ -26,6 +26,7 @@ class jwtViewModel(application: Application):AndroidViewModel(application) {
 
         viewModelScope.launch {
             try {
+
                 _myevent.value =
                     retrofitInstance.api.verifyUser(token)
                 _status.value = "SUCCESS"

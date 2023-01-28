@@ -1,4 +1,4 @@
-package com.example.loginandsignup.fragemnts
+package com.example.loginandsignup.fragments
 
 import android.os.Bundle
 import android.util.Patterns

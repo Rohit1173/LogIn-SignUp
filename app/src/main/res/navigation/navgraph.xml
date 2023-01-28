@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashScreen"
-        android:name="com.example.loginandsignup.fragemnts.SplashScreen"
+        android:name="com.example.loginandsignup.fragments.SplashScreen"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.loginandsignup.fragemnts.SignUpFragment"
+        android:name="com.example.loginandsignup.fragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.loginandsignup.fragemnts.LoginFragment"
+        android:name="com.example.loginandsignup.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/entranceFragment"
-        android:name="com.example.loginandsignup.fragemnts.EntranceFragment"
+        android:name="com.example.loginandsignup.fragments.EntranceFragment"
         android:label="fragment_entrance"
         tools:layout="@layout/fragment_entrance" >
         <action
